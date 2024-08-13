@@ -1,0 +1,193 @@
+[
+{
+    "Exposes": [       
+        {
+            "Address": "0x1f",
+            "Bus": "$bus",
+            "Labels": [
+                "in0",
+                "in1",
+                "in2",
+                "in3"
+            ],
+            "Name": "FAN_ADC",
+            "Thresholds": [
+                {
+                    "Direction": "less than",
+                    "Label": "in0",
+                    "Name": "lower critical",
+                    "Severity": 1,
+                    "Value": 1.045
+                },
+                {
+                    "Direction": "greater than",
+                    "Label": "in0",
+                    "Name": "upper critical",
+                    "Severity": 1,
+                    "Value": 1.155
+                },
+                {
+                    "Direction": "less than",
+                    "Label": "in1",
+                    "Name": "lower critical",
+                    "Severity": 1,
+                    "Value": 3.135
+                },
+                {
+                    "Direction": "greater than",
+                    "Label": "in1",
+                    "Name": "upper critical",
+                    "Severity": 1,
+                    "Value": 3.4
+                },
+                {
+                    "Direction": "less than",
+                    "Label": "in2",
+                    "Name": "lower critical",
+                    "Severity": 1,
+                    "Value": 1.76
+                },
+                {
+                    "Direction": "greater than",
+                    "Label": "in2",
+                    "Name": "upper critical",
+                    "Severity": 1,
+                    "Value": 1.84
+                },
+                {
+                    "Direction": "less than",
+                    "Label": "in3",
+                    "Name": "lower critical",
+                    "Severity": 1,
+                    "Value": 10.8
+                },
+                {
+                    "Direction": "greater than",
+                    "Label": "in3",
+                    "Name": "upper critical",
+                    "Severity": 1,
+                    "Value": 13.2
+                }                    
+            ],
+            "Type": "ADC128D818",
+            "in0_Name": "RMC_FAN_0_VOLT_V",
+            "in0_Scale": 166.667,
+            "in1_Name": "RMC_FAN_0_CURR_A",
+            "in1_Scale": 464,
+            "in2_Name": "RMC_FAN_1_VOLT_V",
+            "in2_Scale": 166.667,
+            "in3_Name": "RMC_FAN_1_CURR_A",
+            "in3_Scale": 464
+        }           
+    ],
+    "Name": "RMC Fan Board $bus * -1 + 16",
+    "Probe": [
+        "xyz.openbmc_project.FruDevice({'BOARD_PRODUCT_NAME': 'Ventura Fan Board.*', 'BUS': 16})"
+    ],
+    "Type": "Board",
+    "xyz.openbmc_project.Inventory.Decorator.Asset": {
+        "BuildDate": "$BOARD_MANUFACTURE_DATE",
+        "Manufacturer": "$BOARD_MANUFACTURER",
+        "Model": "$BOARD_PRODUCT_NAME",
+        "PartNumber": "$BOARD_PART_NUMBER",
+        "SerialNumber": "$BOARD_SERIAL_NUMBER",
+        "SparePartNumber": "$BOARD_INFO_AM1"
+    }
+},
+{
+    "Exposes": [
+        {
+            "Address": "0x1f",
+            "Bus": "$bus",
+            "Labels": [
+                "in0",
+                "in1",
+                "in2",
+                "in3"
+            ],
+            "Name": "FAN_ADC",
+            "Thresholds": [
+                {
+                    "Direction": "less than",
+                    "Label": "in0",
+                    "Name": "lower critical",
+                    "Severity": 1,
+                    "Value": 1.045
+                },
+                {
+                    "Direction": "greater than",
+                    "Label": "in0",
+                    "Name": "upper critical",
+                    "Severity": 1,
+                    "Value": 1.155
+                },
+                {
+                    "Direction": "less than",
+                    "Label": "in1",
+                    "Name": "lower critical",
+                    "Severity": 1,
+                    "Value": 3.135
+                },
+                {
+                    "Direction": "greater than",
+                    "Label": "in1",
+                    "Name": "upper critical",
+                    "Severity": 1,
+                    "Value": 3.4
+                },
+                {
+                    "Direction": "less than",
+                    "Label": "in2",
+                    "Name": "lower critical",
+                    "Severity": 1,
+                    "Value": 1.76
+                },
+                {
+                    "Direction": "greater than",
+                    "Label": "in2",
+                    "Name": "upper critical",
+                    "Severity": 1,
+                    "Value": 1.84
+                },
+                {
+                    "Direction": "less than",
+                    "Label": "in3",
+                    "Name": "lower critical",
+                    "Severity": 1,
+                    "Value": 10.8
+                },
+                {
+                    "Direction": "greater than",
+                    "Label": "in3",
+                    "Name": "upper critical",
+                    "Severity": 1,
+                    "Value": 13.2
+                }                    
+            ],
+            "Type": "ADC128D818",
+            "in0_Name": "RMC_FAN_2_VOLT_V",
+            "in0_Scale": 166.667,
+            "in1_Name": "RMC_FAN_2_CURR_A",
+            "in1_Scale": 464,
+            "in2_Name": "RMC_FAN_3_VOLT_V",
+            "in2_Scale": 166.667,
+            "in3_Name": "RMC_FAN_3_CURR_A",
+            "in3_Scale": 464           
+        }           
+    ],
+    "Name": "RMC Fan Board $bus * -1 + 18",
+    "Probe": [
+        "xyz.openbmc_project.FruDevice({'BOARD_PRODUCT_NAME': 'Ventura FAN Board.*', 'BUS': 17})"
+    ],
+    "Type": "Board",
+    "xyz.openbmc_project.Inventory.Decorator.Asset": {
+        "BuildDate": "$BOARD_MANUFACTURE_DATE",
+        "Manufacturer": "$BOARD_MANUFACTURER",
+        "Model": "$BOARD_PRODUCT_NAME",
+        "PartNumber": "$BOARD_PART_NUMBER",
+        "SerialNumber": "$BOARD_SERIAL_NUMBER",
+        "SparePartNumber": "$BOARD_INFO_AM1"
+    }
+}
+
+]

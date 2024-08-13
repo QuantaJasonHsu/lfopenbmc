@@ -3,6 +3,7 @@ FILESEXTRAPATHS:prepend:ventura := "${THISDIR}/${PN}:"
 SRC_URI:append:ventura = " \
     file://ventura_rmc.json \
     file://ventura_scm.json \    
+    file://ventura_fanboard.json \
 "
 
 do_install:append:ventura () {
