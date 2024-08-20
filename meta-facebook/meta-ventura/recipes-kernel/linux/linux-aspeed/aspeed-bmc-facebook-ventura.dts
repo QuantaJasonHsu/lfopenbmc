@@ -216,6 +216,14 @@
 				reg = <0x20>;
 				#address-cells = <1>;
 				#size-cells = <0>;
+				channel@2 {
+					    reg = <2>;
+						sensor-type = "TACH";
+				};
+				channel@5 {
+					    reg = <5>;
+						sensor-type = "TACH";
+				};
 			};
 		};
 
