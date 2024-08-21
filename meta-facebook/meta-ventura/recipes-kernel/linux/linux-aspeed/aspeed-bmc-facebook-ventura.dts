@@ -451,7 +451,7 @@
 };
 
 &adc0 {
-	aspeed,int-vref-microvolt = <1800000>;
+	aspeed,int-vref-microvolt = <2500000>;
 	status = "okay";
 	pinctrl-0 = <&pinctrl_adc0_default &pinctrl_adc1_default
 		&pinctrl_adc2_default &pinctrl_adc3_default
