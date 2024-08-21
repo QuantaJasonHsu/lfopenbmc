@@ -4,11 +4,17 @@
 
 #include "aspeed-g6.dtsi"
 #include <dt-bindings/gpio/aspeed-gpio.h>
+#include <dt-bindings/usb/pd.h>
+#include <dt-bindings/interrupt-controller/irq.h>
 #include <dt-bindings/i2c/i2c.h>
 
 / {
 	model = "Facebook ventura RMC";
 	compatible = "facebook,ventura-cmc", "aspeed,ast2600";
+
+ 	switchphy: ethernet-phy@0 {
+ 		// Fixed-link
+ 	};		
 
 	aliases {
 		serial4 = &uart5;
@@ -96,6 +102,19 @@
 	aspeed,ext-push-pull;
 	aspeed,ext-active-high;
 	aspeed,ext-pulse-duration = <256>;
+};
+
+&mac0 {
+ 	status = "okay";
+ 	phy-mode = "rgmii";
+ 	phy-handle = <&switchphy>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_rgmii1_default>;
+ 
+ 	fixed-link {
+ 		speed = <1000>;
+ 		full-duplex;
+ 	};
 };
 
 &mac3 {
@@ -212,7 +231,7 @@
 			reg = <5>;
 
 			max31790@20 {
-				compatible = "max31790";
+				compatible = "maxim,max31790";
 				reg = <0x20>;
 				#address-cells = <1>;
 				#size-cells = <0>;
