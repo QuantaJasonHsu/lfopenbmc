@@ -10,3 +10,7 @@ OBMC_IMAGE_EXTRA_INSTALL:append = " \
     libftdi \
     ftdi-eeprom \
 "
+OBMC_IMAGE_EXTRA_INSTALL:append = " \
+    obmc-console \
+"
+
