@@ -14,3 +14,7 @@ OBMC_IMAGE_EXTRA_INSTALL:append = " \
     obmc-console \
 "
 
+# Enable mbpoll for communicate with smart valve by modbus command
+OBMC_IMAGE_EXTRA_INSTALL:append = " \
+    mbpoll \
+"
