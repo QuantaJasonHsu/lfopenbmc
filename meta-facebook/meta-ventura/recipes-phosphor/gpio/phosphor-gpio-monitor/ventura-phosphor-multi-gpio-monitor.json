@@ -891,17 +891,6 @@
         "Continue": true
     },
     {
-        "Name": "AALC_RPU_READY",
-        "ChipId": "2",
-        "GpioNum": 32,
-        "EventMon": "BOTH",
-        "Targets": {
-            "FALLING": ["rpu-ready-deassert@rpu_ready.service"],
-            "RISING": ["rpu-ready-assert@rpu_ready.service"]
-        },
-        "Continue": true
-    },
-    {
         "Name": "LEAK0_DETECT",
         "ChipId": "2",
         "GpioNum": 34,
@@ -931,6 +920,105 @@
         "Targets": {
             "FALLING": ["leak-detect-deassert@leak2_detect.service"],
             "RISING": ["leak-detect-assert@leak2_detect.service"]
+        },
+        "Continue": true
+    },
+    {
+        "Name": "AALC_RPU_READY",
+        "ChipId": "2",
+        "GpioNum": 32,
+        "EventMon": "BOTH",
+        "Targets": {
+            "FALLING": ["rpu-ready-deassert@rpu_ready.service"],
+            "RISING": ["rpu-ready-assert@rpu_ready.service"]
+        },
+        "Continue": true
+    },
+    {
+        "Name": "RPU_READY_PLD_R",
+        "ChipId": "2",
+        "GpioNum": 30,
+        "EventMon": "BOTH",
+        "Targets": {
+            "FALLING": ["leak-detect-deassert@rpu0_ready.service"],
+            "RISING": ["leak-detect-assert@rpu0_ready.service"]
+        },
+        "Continue": true
+    },
+    {
+        "Name": "RPU_READY_SPARE_PLD_R",
+        "ChipId": "2",
+        "GpioNum": 28,
+        "EventMon": "BOTH",
+        "Targets": {
+            "FALLING": ["leak-detect-deassert@rpu0_ready_spare.service"],
+            "RISING": ["leak-detect-assert@rpu0_ready_spare.service"]
+        },
+        "Continue": true
+    },
+    {
+        "Name": "RPU_2_READY_PLD_R",
+        "ChipId": "2",
+        "GpioNum": 26,
+        "EventMon": "BOTH",
+        "Targets": {
+            "FALLING": ["leak-detect-deassert@rpu1_ready.service"],
+            "RISING": ["leak-detect-assert@rpu1_ready.service"]
+        },
+        "Continue": true
+    },
+    {
+        "Name": "RPU_2_READY_SPARE_PLD_R",
+        "ChipId": "2",
+        "GpioNum": 24,
+        "EventMon": "BOTH",
+        "Targets": {
+            "FALLING": ["leak-detect-deassert@rpu1_ready_spare.service"],
+            "RISING": ["leak-detect-assert@rpu1_ready_spare.service"]
+        },
+        "Continue": true
+    },
+    {
+        "Name": "IT_STOP_PUMP",
+        "ChipId": "2",
+        "GpioNum": 22,
+        "EventMon": "BOTH",
+        "Targets": {
+            "FALLING": ["leak-detect-deassert@it_stop_pump0.service"],
+            "RISING": ["leak-detect-assert@it_stop_pump0.service"]
+        },
+        "Continue": true
+    },
+    {
+        "Name": "IT_STOP_PUMP_SPARE",
+        "ChipId": "2",
+        "GpioNum": 20,
+        "EventMon": "BOTH",
+        "Targets": {
+            "FALLING": ["leak-detect-deassert@it_stop_pump0_spare.service"],
+            "RISING": ["leak-detect-assert@it_stop_pump0_spare.service"]
+        },
+        "Continue": true
+    },
+    {
+        "Name": "IT_STOP_PUMP_2",
+        "ChipId": "2",
+        "GpioNum": 18,
+        "EventMon": "BOTH",
+        "Targets": {
+            "FALLING": ["leak-detect-deassert@it_stop_pump1.service"],
+            "RISING": ["leak-detect-assert@it_stop_pump1.service"]
+        },
+        "Continue": true
+    },
+    {
+        "Name": "IT_STOP_PUMP_SPARE",
+        "ChipId": "2",
+        "GpioNum": 16,
+        "EventMon": "BOTH",
+        "Targets": {
+            "FALLING": ["leak-detect-deassert@it_stop_pump1_spare.service"],
+            "RISING": ["leak-detect-assert@it_stop_pump1_spare.service"]
         },
         "Continue": true
     }
