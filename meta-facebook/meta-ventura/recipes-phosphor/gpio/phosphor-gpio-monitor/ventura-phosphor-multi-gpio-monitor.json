@@ -71,8 +71,8 @@
         "GpioNum": 106,
         "EventMon": "BOTH",
         "Targets": {
-            "FALLING": ["leak-detect-assert@small-leak-compute-tray-6.service"],
-            "RISING": ["leak-detect-deassert@small-leak-compute-tray-6.service"]
+            "FALLING": ["leak-detect-assert@small-leak-compute-tray-7.service"],
+            "RISING": ["leak-detect-deassert@small-leak-compute-tray-7.service"]
         },
         "Continue": true
     },
