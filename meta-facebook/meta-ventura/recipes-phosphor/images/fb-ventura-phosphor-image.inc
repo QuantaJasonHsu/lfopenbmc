@@ -7,7 +7,6 @@ OBMC_IMAGE_EXTRA_INSTALL:append = " \
 
 # Enable for run-time configurate the LT4232
 OBMC_IMAGE_EXTRA_INSTALL:append = " \
-    libftdi \
     ftdi-eeprom \
 "
 OBMC_IMAGE_EXTRA_INSTALL:append = " \
