@@ -1,0 +1,12 @@
+#!/bin/bash -e
+
+set_bmc_ready()
+{
+    local bmc_ready="/sys/class/leds/bmc_ready_noled/brightness"
+    echo 1 > ${bmc_ready}   
+    return 0
+}
+
+set_bmc_ready
+
+exit 0
