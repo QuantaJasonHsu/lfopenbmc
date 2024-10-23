@@ -1,4 +1,6 @@
-#!/bin/bash -e
+#!/bin/bash
+
+source /usr/libexec/fb-common-functions
 
 set_bmc_ready()
 {
@@ -6,6 +8,14 @@ set_bmc_ready()
     echo 1 > ${bmc_ready}   
     return 0
 }
+
+# Change the i2c path to the eeprom to the 88E6393X 
+set_gpio FM_88E6393X_BIN_UPDATE_EN_N 1
+# Sleep 2s
+sleep 2s
+# Enable the pwrgd to the 88E6393X
+# Temp setting by gpio group and number directly, need to discuss whether need to define in the DTS (long term solution)
+gpioset 0 100=1
 
 set_bmc_ready
 
