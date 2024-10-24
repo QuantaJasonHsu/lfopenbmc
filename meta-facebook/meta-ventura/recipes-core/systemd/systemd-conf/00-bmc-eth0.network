@@ -1,0 +1,7 @@
+[Match]
+Name=eth0
+
+[Network]
+DHCP=false
+VLAN=eth0.10
+VLAN=eth0.20
