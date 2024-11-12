@@ -1,0 +1,8 @@
+[Match]
+Name=eth0.20
+
+[Network]
+DHCP=yes
+IPv6AcceptRA=true
+[DHCP]
+ClientIdentifier=mac
