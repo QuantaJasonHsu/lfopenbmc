@@ -1,0 +1,612 @@
+#!/bin/bash -e
+
+FAN_STATUS_UNKNOWN="Unknown"
+FAN_STATUS_NORMAL="Normal"
+TRAY_STATUS_BLUE="LED BLUE LIGHT"
+
+check_tray_led_status()
+{
+    local service="xyz.openbmc_project.Inventory.Manager"
+    local compute_object_path="/xyz/openbmc_project/inventory/system/board/Ventura_RMC/PRSNT_COMPUTE_TRAY"
+    local nvs_object_path="/xyz/openbmc_project/inventory/system/board/Ventura_RMC/PRSNT_NVS_TRAY"
+    local interface="xyz.openbmc_project.Inventory.Item"
+    local property="Present"
+    local LEDstate="off"
+    local i=1
+    local j=1    
+
+    for i in {1..18} 
+    do
+        compute_present=$(busctl get-property "$service" "$compute_object_path$i" "$interface" "$property" | cut -d ' ' -f2)
+        echo "$compute_present"        
+        if [ "$compute_present" == "true" ]; then            
+            echo "$TRAY_STATUS_BLUE"
+
+            if [ $i == 1 ]; then
+                LEDstate=$(journalctl -u phosphor-multi-gpio-monitor.service | grep -i "148" | tail -1 | cut -d ' ' -f9)
+                if [ "$LEDstate" == "Deasserted" ]; then               
+                    i2cset -f -y "15" "0x21" "0x03" "0x00"
+                    i2cset -f -y -m "0x80" "15" "0x21" "0x07" "0x7f"
+                    i2cset -f -y "15" "0x25" "0x02" "0x00"
+                    i2cset -f -y -m "0x01" "15" "0x25" "0x06" "0xfe"
+                    sleep 1
+                elif [ "$LEDstate" == "Asserted" ]; then
+                    i2cset -f -y -m "0x80" "15" "0x21" "0x07" "0x80"
+                    i2cset -f -y -m "0x01" "15" "0x25" "0x06" "0x01"
+                fi
+                LEDstate=$(journalctl -u phosphor-multi-gpio-monitor.service | grep -i "202" | tail -1 | cut -d ' ' -f9)
+                if [ "$LEDstate" == "Deasserted" ]; then
+                    i2cset -f -y "15" "0x21" "0x03" "0x00"
+                    i2cset -f -y -m "0x40" "15" "0x21" "0x07" "0xbf"
+                    i2cset -f -y "15" "0x25" "0x02" "0x00"
+                    i2cset -f -y -m "0x01" "15" "0x25" "0x06" "0xfe"
+                    sleep 1
+                elif [ "$LEDstate" == "Asserted" ]; then
+                    i2cset -f -y -m "0x40" "15" "0x21" "0x07" "0x40"
+                    i2cset -f -y -m "0x01" "15" "0x25" "0x06" "0x01"
+                fi
+            elif [ $i == 2 ]; then
+                LEDstate=$(journalctl -u phosphor-multi-gpio-monitor.service | grep -i "150" | tail -1 | cut -d ' ' -f9)
+                if [ "$LEDstate" == "Deasserted" ]; then
+                    i2cset -f -y "15" "0x20" "0x03" "0x00"
+                    i2cset -f -y -m "0x0c" "15" "0x20" "0x07" "0xf3"
+                    sleep 1  
+                elif [ "$LEDstate" == "Asserted" ]; then
+                    i2cset -f -y -m "0x04" "15" "0x20" "0x07" "0x04"
+                fi
+                LEDstate=$(journalctl -u phosphor-multi-gpio-monitor.service | grep -i "204" | tail -1 | cut -d ' ' -f9)
+                if [ "$LEDstate" == "Deasserted" ]; then
+                    i2cset -f -y "15" "0x20" "0x03" "0x00"
+                    i2cset -f -y -m "0x0a" "15" "0x20" "0x07" "0xf5"
+                    sleep 1
+                elif [ "$LEDstate" == "Asserted" ]; then
+                    i2cset -f -y -m "0x02" "15" "0x20" "0x07" "0x02"
+                fi
+            elif [ $i == 3 ]; then
+                LEDstate=$(journalctl -u phosphor-multi-gpio-monitor.service | grep -i "152" | tail -1 | cut -d ' ' -f9)
+                if [ "$LEDstate" == "Deasserted" ]; then
+                    i2cset -f -y "15" "0x20" "0x03" "0x00"
+                    i2cset -f -y -m "0x01" "15" "0x20" "0x07" "0xfe"
+                    i2cset -f -y "15" "0x20" "0x02" "0x00"
+                    i2cset -f -y -m "0x80" "15" "0x20" "0x06" "0x7f"
+                    sleep 1
+                elif [ "$LEDstate" == "Asserted" ]; then
+                    i2cset -f -y -m "0x80" "15" "0x20" "0x06" "0x80"
+                fi
+                LEDstate=$(journalctl -u phosphor-multi-gpio-monitor.service | grep -i "206" | tail -1 | cut -d ' ' -f9)
+                if [ "$LEDstate" == "Deasserted" ]; then
+                    i2cset -f -y "15" "0x20" "0x03" "0x00"
+                    i2cset -f -y -m "0x01" "15" "0x20" "0x07" "0xfe"
+                    i2cset -f -y "15" "0x20" "0x02" "0x00"
+                    i2cset -f -y -m "0x40" "15" "0x20" "0x06" "0xbf"
+                    sleep 1
+                elif [ "$LEDstate" == "Asserted" ]; then
+                    i2cset -f -y -m "0x40" "15" "0x20" "0x06" "0x40"
+                fi
+            elif [ $i == 4 ]; then
+                LEDstate=$(journalctl -u phosphor-multi-gpio-monitor.service | grep -i "154" | tail -1 | cut -d ' ' -f9)
+                if [ "$LEDstate" == "Deasserted" ]; then
+                    i2cset -f -y "15" "0x24" "0x02" "0x00"
+                    i2cset -f -y -m "0x03" "15" "0x24" "0x06" "0xfc"
+                sleep 1
+                elif [ "$LEDstate" == "Asserted" ]; then
+                    i2cset -f -y -m "0x03" "15" "0x24" "0x06" "0x03"
+                fi
+                LEDstate=$(journalctl -u phosphor-multi-gpio-monitor.service | grep -i "208" | tail -1 | cut -d ' ' -f9)
+                if [ "$LEDstate" == "Deasserted" ]; then
+                    i2cset -f -y "15" "0x20" "0x03" "0x00"
+                    i2cset -f -y -m "0x80" "15" "0x20" "0x07" "0x7f"
+                    i2cset -f -y "15" "0x24" "0x02" "0x00"
+                    i2cset -f -y -m "0x02" "15" "0x24" "0x06" "0xfd"
+                    sleep 1
+                elif [ "$LEDstate" == "Asserted" ]; then
+                    i2cset -f -y -m "0x80" "15" "0x20" "0x07" "0x80"
+                    i2cset -f -y -m "0x02" "15" "0x24" "0x06" "0x02"
+                fi
+            elif [ $i == 5 ]; then
+                LEDstate=$(journalctl -u phosphor-multi-gpio-monitor.service | grep -i "156" | tail -1 | cut -d ' ' -f9)
+                if [ "$LEDstate" == "Deasserted" ]; then
+                    i2cset -f -y "15" "0x20" "0x03" "0x00"
+                    i2cset -f -y -m "0x60" "15" "0x20" "0x07" "0x9f"
+                    sleep 1
+                elif [ "$LEDstate" == "Asserted" ]; then
+                    i2cset -f -y -m "0x60" "15" "0x20" "0x07" "0x60"
+                fi
+                LEDstate=$(journalctl -u phosphor-multi-gpio-monitor.service | grep -i "210" | tail -1 | cut -d ' ' -f9)
+                if [ "$LEDstate" == "Deasserted" ]; then
+                    i2cset -f -y "15" "0x20" "0x03" "0x00"
+                    i2cset -f -y -m "0x50" "15" "0x20" "0x07" "0xaf"
+                    sleep 1
+                elif [ "$LEDstate" == "Asserted" ]; then
+                    i2cset -f -y -m "0x50" "15" "0x20" "0x07" "0x50"
+                fi
+            elif [ $i == 6 ]; then
+                LEDstate=$(journalctl -u phosphor-multi-gpio-monitor.service | grep -i "158" | tail -1 | cut -d ' ' -f9)
+                if [ "$LEDstate" == "Deasserted" ]; then
+                    i2cset -f -y "15" "0x24" "0x02" "0x00"
+                    i2cset -f -y -m "0xc0" "15" "0x24" "0x06" "0x3f"
+                    sleep 1
+                elif [ "$LEDstate" == "Asserted" ]; then
+                    i2cset -f -y -m "0x40" "15" "0x24" "0x06" "0x40"
+                fi
+                LEDstate=$(journalctl -u phosphor-multi-gpio-monitor.service | grep -i "212" | tail -1 | cut -d ' ' -f9)
+                if [ "$LEDstate" == "Deasserted" ]; then
+                    i2cset -f -y "15" "0x24" "0x02" "0x00"
+                    i2cset -f -y -m "0xa0" "15" "0x24" "0x06" "0x5f"
+                    sleep 1
+                elif [ "$LEDstate" == "Asserted" ]; then
+                    i2cset -f -y -m "0x20" "15" "0x24" "0x06" "0x20"
+                fi
+            elif [ $i == 7 ]; then
+                LEDstate=$(journalctl -u phosphor-multi-gpio-monitor.service | grep -i "160" | tail -1 | cut -d ' ' -f9)
+                if [ "$LEDstate" == "Deasserted" ]; then
+                    i2cset -f -y "15" "0x24" "0x02" "0x00"
+                    i2cset -f -y -m "0x18" "15" "0x24" "0x06" "0xe7"
+                    sleep 1
+                elif [ "$LEDstate" == "Asserted" ]; then
+                    2cset -f -y -m "0x18" "15" "0x24" "0x06" "0x18"
+                fi
+                LEDstate=$(journalctl -u phosphor-multi-gpio-monitor.service | grep -i "214" | tail -1 | cut -d ' ' -f9)
+                if [ "$LEDstate" == "Deasserted" ]; then
+                    i2cset -f -y "15" "0x24" "0x02" "0x00"
+                    i2cset -f -y -m "0x14" "15" "0x24" "0x06" "0xeb"
+                    sleep 1
+                elif [ "$LEDstate" == "Asserted" ]; then
+                    i2cset -f -y -m "0x14" "15" "0x24" "0x06" "0x14"
+                fi
+            elif [ $i == 8 ]; then
+                LEDstate=$(journalctl -u phosphor-multi-gpio-monitor.service | grep -i "162" | tail -1 | cut -d ' ' -f9)
+                if [ "$LEDstate" == "Deasserted" ]; then
+                    i2cset -f -y "15" "0x24" "0x03" "0x00"
+                    i2cset -f -y -m "0x30" "15" "0x24" "0x07" "0xcf"
+                    sleep 1
+                elif [ "$LEDstate" == "Asserted" ]; then
+                    i2cset -f -y -m "0x30" "15" "0x24" "0x07" "0x30"
+                fi
+                LEDstate=$(journalctl -u phosphor-multi-gpio-monitor.service | grep -i "216" | tail -1 | cut -d ' ' -f9)
+                if [ "$LEDstate" == "Deasserted" ]; then
+                    i2cset -f -y "15" "0x24" "0x03" "0x00"
+                    i2cset -f -y -m "0x28" "15" "0x24" "0x07" "0xd7"
+                    sleep 1
+                elif [ "$LEDstate" == "Asserted" ]; then
+                    i2cset -f -y -m "0x28" "15" "0x24" "0x07" "0x28"
+                fi
+            elif [ $i == 9 ]; then
+                LEDstate=$(journalctl -u phosphor-multi-gpio-monitor.service | grep -i "164" | tail -1 | cut -d ' ' -f9)
+                if [ "$LEDstate" == "Deasserted" ]; then
+                    i2cset -f -y "15" "0x24" "0x03" "0x00"
+                    i2cset -f -y -m "0x06" "15" "0x24" "0x07" "0xf9"
+                    sleep 1
+                elif [ "$LEDstate" == "Asserted" ]; then
+                    i2cset -f -y -m "0x06" "15" "0x24" "0x07" "0x06"
+                fi
+                LEDstate=$(journalctl -u phosphor-multi-gpio-monitor.service | grep -i "218" | tail -1 | cut -d ' ' -f9)
+                if [ "$LEDstate" == "Deasserted" ]; then
+                    i2cset -f -y "15" "0x24" "0x02" "0x00"
+                    i2cset -f -y -m "0x80" "15" "0x24" "0x06" "0x7f"
+                    i2cset -f -y "15" "0x24" "0x03" "0x00"
+                    i2cset -f -y -m "0x04" "15" "0x24" "0x07" "0xfb"
+                    sleep 1
+                elif [ "$LEDstate" == "Asserted" ]; then
+                    i2cset -f -y -m "0x80" "15" "0x24" "0x06" "0x80"
+                    i2cset -f -y -m "0x04" "15" "0x24" "0x07" "0x04"
+                fi
+            elif [ $i == 10 ]; then
+                LEDstate=$(journalctl -u phosphor-multi-gpio-monitor.service | grep -i "166" | tail -1 | cut -d ' ' -f9)
+                if [ "$LEDstate" == "Deasserted" ]; then
+                    i2cset -f -y "15" "0x22" "0x02" "0x00"
+                    i2cset -f -y -m "0x0c" "15" "0x22" "0x06" "0xf3"
+                    sleep 1
+                elif [ "$LEDstate" == "Asserted" ]; then
+                    i2cset -f -y -m "0x0c" "15" "0x22" "0x06" "0x0c"
+                fi
+                LEDstate=$(journalctl -u phosphor-multi-gpio-monitor.service | grep -i "220" | tail -1 | cut -d ' ' -f9)
+                if [ "$LEDstate" == "Deasserted" ]; then
+                    i2cset -f -y "15" "0x22" "0x02" "0x00"
+                    i2cset -f -y -m "0x0a" "15" "0x22" "0x06" "0xf5"
+                    sleep 1
+                elif [ "$LEDstate" == "Asserted" ]; then
+                    i2cset -f -y -m "0x0a" "15" "0x22" "0x06" "0x0a"
+                fi
+            elif [ $i == 11 ]; then
+                LEDstate=$(journalctl -u phosphor-multi-gpio-monitor.service | grep -i "168" | tail -1 | cut -d ' ' -f9)
+                if [ "$LEDstate" == "Deasserted" ]; then
+                    i2cset -f -y "15" "0x24" "0x03" "0x00"
+                    i2cset -f -y -m "0x80" "15" "0x24" "0x07" "0x7f"
+                    i2cset -f -y "15" "0x22" "0x02" "0x00"
+                    i2cset -f -y -m "0x01" "15" "0x22" "0x06" "0xfe"                
+                    sleep 1
+                elif [ "$LEDstate" == "Asserted" ]; then
+                    i2cset -f -y -m "0x80" "15" "0x24" "0x07" "0x80"
+                    i2cset -f -y -m "0x01" "15" "0x22" "0x06" "0x01"
+                fi
+                LEDstate=$(journalctl -u phosphor-multi-gpio-monitor.service | grep -i "222" | tail -1 | cut -d ' ' -f9)
+                if [ "$LEDstate" == "Deasserted" ]; then
+                    i2cset -f -y "15" "0x24" "0x03" "0x00"
+                    i2cset -f -y -m "0x40" "15" "0x24" "0x07" "0xbf"
+                    i2cset -f -y "15" "0x22" "0x02" "0x00"
+                    i2cset -f -y -m "0x01" "15" "0x22" "0x06" "0xfe"
+                    sleep 1
+                elif [ "$LEDstate" == "Asserted" ]; then
+                    i2cset -f -y -m "0x40" "15" "0x24" "0x07" "0x40"
+                    i2cset -f -y -m "0x01" "15" "0x22" "0x06" "0x01"
+                fi
+            elif [ $i == 12 ]; then
+                LEDstate=$(journalctl -u phosphor-multi-gpio-monitor.service | grep -i "170" | tail -1 | cut -d ' ' -f9)
+                if [ "$LEDstate" == "Deasserted" ]; then
+                    i2cset -f -y "15" "0x22" "0x03" "0x00"
+                    i2cset -f -y -m "0x03" "15" "0x22" "0x07" "0xfc"
+                    sleep 1
+                elif [ "$LEDstate" == "Asserted" ]; then
+                    i2cset -f -y -m "0x03" "15" "0x22" "0x07" "0x03"
+                fi
+                LEDstate=$(journalctl -u phosphor-multi-gpio-monitor.service | grep -i "224" | tail -1 | cut -d ' ' -f9)
+                if [ "$LEDstate" == "Deasserted" ]; then
+                    i2cset -f -y "15" "0x22" "0x03" "0x00"
+                    i2cset -f -y -m "0x02" "15" "0x22" "0x07" "0xfd"
+                    i2cset -f -y "15" "0x22" "0x02" "0x00"
+                    i2cset -f -y -m "0x80" "15" "0x22" "0x06" "0x7f"
+                    sleep 1
+                elif [ "$LEDstate" == "Asserted" ]; then
+                    i2cset -f -y -m "0x02" "15" "0x22" "0x07" "0x02"
+                    i2cset -f -y -m "0x80" "15" "0x22" "0x06" "0x80"
+                fi
+            elif [ $i == 13 ]; then
+                LEDstate=$(journalctl -u phosphor-multi-gpio-monitor.service | grep -i "172" | tail -1 | cut -d ' ' -f9)
+                if [ "$LEDstate" == "Deasserted" ]; then
+                    i2cset -f -y "15" "0x22" "0x02" "0x00"
+                    i2cset -f -y -m "0x60" "15" "0x22" "0x06" "0x9f"
+                    sleep 1
+                elif [ "$LEDstate" == "Asserted" ]; then
+                    i2cset -f -y -m "0x60" "15" "0x22" "0x06" "0x60"
+                fi
+                LEDstate=$(journalctl -u phosphor-multi-gpio-monitor.service | grep -i "226" | tail -1 | cut -d ' ' -f9)
+                if [ "$LEDstate" == "Deasserted" ]; then
+                    i2cset -f -y "15" "0x22" "0x02" "0x00"
+                    i2cset -f -y -m "0x50" "15" "0x22" "0x06" "0xaf"
+                    sleep 1
+                elif [ "$LEDstate" == "Asserted" ]; then
+                    i2cset -f -y -m "0x50" "15" "0x22" "0x06" "0x50"
+                fi
+            elif [ $i == 14 ]; then
+                LEDstate=$(journalctl -u phosphor-multi-gpio-monitor.service | grep -i "174" | tail -1 | cut -d ' ' -f9)
+                if [ "$LEDstate" == "Deasserted" ]; then
+                    i2cset -f -y "15" "0x22" "0x03" "0x00"
+                    i2cset -f -y -m "0xc0" "15" "0x22" "0x07" "0x3f"
+                    sleep 1
+                elif [ "$LEDstate" == "Asserted" ]; then
+                    i2cset -f -y -m "0xc0" "15" "0x22" "0x07" "0xc0"
+                fi
+                LEDstate=$(journalctl -u phosphor-multi-gpio-monitor.service | grep -i "228" | tail -1 | cut -d ' ' -f9)
+                if [ "$LEDstate" == "Deasserted" ]; then
+                    i2cset -f -y "15" "0x22" "0x03" "0x00"
+                    i2cset -f -y -m "0xa0" "15" "0x22" "0x07" "0x5f"
+                    sleep 1
+                elif [ "$LEDstate" == "Asserted" ]; then
+                    i2cset -f -y -m "0xa0" "15" "0x22" "0x07" "0xa0"
+                fi
+            elif [ $i == 15 ]; then
+                LEDstate=$(journalctl -u phosphor-multi-gpio-monitor.service | grep -i "176" | tail -1 | cut -d ' ' -f9)
+                if [ "$LEDstate" == "Deasserted" ]; then
+                    i2cset -f -y "15" "0x22" "0x03" "0x00"
+                    i2cset -f -y -m "0x18" "15" "0x22" "0x07" "0xe7"
+                    sleep 1
+                elif [ "$LEDstate" == "Asserted" ]; then
+                    i2cset -f -y -m "0x18" "15" "0x22" "0x07" "0x18"
+                fi
+                LEDstate=$(journalctl -u phosphor-multi-gpio-monitor.service | grep -i "230" | tail -1 | cut -d ' ' -f9)
+                if [ "$LEDstate" == "Deasserted" ]; then
+                    i2cset -f -y "15" "0x22" "0x03" "0x00"
+                    i2cset -f -y -m "0x14" "15" "0x22" "0x07" "0xeb"
+                    sleep 1
+                elif [ "$LEDstate" == "Asserted" ]; then
+                    i2cset -f -y -m "0x14" "15" "0x22" "0x07" "0x14"
+                fi
+            elif [ $i == 16 ]; then
+                LEDstate=$(journalctl -u phosphor-multi-gpio-monitor.service | grep -i "178" | tail -1 | cut -d ' ' -f9)
+                if [ "$LEDstate" == "Deasserted" ]; then               
+                    i2cset -f -y "15" "0x26" "0x02" "0x00"
+                    i2cset -f -y -m "0x30" "15" "0x26" "0x06" "0xcf"
+                    sleep 1
+                elif [ "$LEDstate" == "Asserted" ]; then
+                    i2cset -f -y -m "0x10" "15" "0x26" "0x06" "0x10"
+                fi
+                LEDstate=$(journalctl -u phosphor-multi-gpio-monitor.service | grep -i "232" | tail -1 | cut -d ' ' -f9)
+                if [ "$LEDstate" == "Deasserted" ]; then
+                    i2cset -f -y "15" "0x26" "0x02" "0x00"
+                    i2cset -f -y -m "0x28" "15" "0x26" "0x06" "0xd7"
+                    sleep 1
+                elif [ "$LEDstate" == "Asserted" ]; then
+                    i2cset -f -y -m "0x08" "15" "0x26" "0x06" "0x08"
+                fi
+            elif [ $i == 17 ]; then
+                LEDstate=$(journalctl -u phosphor-multi-gpio-monitor.service | grep -i "180" | tail -1 | cut -d ' ' -f9)
+                if [ "$LEDstate" == "Deasserted" ]; then
+                    i2cset -f -y "15" "0x26" "0x02" "0x00"
+                    i2cset -f -y -m "0x06" "15" "0x26" "0x06" "0xf9"
+                    sleep 1
+                elif [ "$LEDstate" == "Asserted" ]; then
+                    i2cset -f -y -m "0x02" "15" "0x26" "0x06" "0x02"
+                fi
+                LEDstate=$(journalctl -u phosphor-multi-gpio-monitor.service | grep -i "234" | tail -1 | cut -d ' ' -f9)
+                if [ "$LEDstate" == "Deasserted" ]; then
+                    i2cset -f -y "15" "0x26" "0x02" "0x00"
+                    i2cset -f -y -m "0x05" "15" "0x26" "0x06" "0xfa"
+                    sleep 1
+                elif [ "$LEDstate" == "Asserted" ]; then
+                    i2cset -f -y -m "0x01" "15" "0x26" "0x06" "0x01"
+                fi
+            elif [ $i == 18 ]; then
+                LEDstate=$(journalctl -u phosphor-multi-gpio-monitor.service | grep -i "182" | tail -1 | cut -d ' ' -f9)
+                if [ "$LEDstate" == "Deasserted" ]; then
+                    i2cset -f -y "15" "0x26" "0x03" "0x00"
+                    i2cset -f -y -m "0x0c" "15" "0x26" "0x07" "0xf3"
+                    sleep 1
+                elif [ "$LEDstate" == "Asserted" ]; then
+                    i2cset -f -y -m "0x04" "15" "0x26" "0x07" "0x04"
+                fi
+                LEDstate=$(journalctl -u phosphor-multi-gpio-monitor.service | grep -i "236" | tail -1 | cut -d ' ' -f9)
+                if [ "$LEDstate" == "Deasserted" ]; then
+                    i2cset -f -y "15" "0x26" "0x03" "0x00"
+                    i2cset -f -y -m "0x0a" "15" "0x26" "0x07" "0xf5"
+                    sleep 1
+                elif [ "$LEDstate" == "Asserted" ]; then
+                    i2cset -f -y -m "0x02" "15" "0x26" "0x07" "0x02"
+                fi
+            fi
+        else
+            if [ $i == 1 ]; then
+                i2cset -f -y -m "0x80" "15" "0x21" "0x07" "0x80"
+                i2cset -f -y -m "0x01" "15" "0x25" "0x06" "0x01"
+            elif [ $i == 2 ]; then
+                i2cset -f -y -m "0x06" "15" "0x20" "0x07" "0x06"
+            elif [ $i == 3 ]; then
+                i2cset -f -y -m "0x01" "15" "0x20" "0x07" "0x01"
+                i2cset -f -y -m "0x80" "15" "0x20" "0x06" "0x80"
+                i2cset -f -y -m "0x01" "15" "0x20" "0x07" "0x01"
+                i2cset -f -y -m "0x40" "15" "0x20" "0x06" "0x40"
+            elif [ $i == 4 ]; then
+                i2cset -f -y -m "0x03" "15" "0x24" "0x06" "0x03"
+                i2cset -f -y -m "0x80" "15" "0x20" "0x07" "0x80"
+                i2cset -f -y -m "0x02" "15" "0x24" "0x06" "0x02"
+            elif [ $i == 5 ]; then
+                i2cset -f -y -m "0x60" "15" "0x20" "0x07" "0x60"
+            elif [ $i == 6 ]; then
+                i2cset -f -y -m "0x60" "15" "0x24" "0x06" "0x60"
+            elif [ $i == 7 ]; then
+                i2cset -f -y -m "0x18" "15" "0x24" "0x06" "0x18"
+                i2cset -f -y -m "0x14" "15" "0x24" "0x06" "0x14"
+            elif [ $i == 8 ]; then
+                i2cset -f -y -m "0x30" "15" "0x24" "0x07" "0x30"
+                i2cset -f -y -m "0x28" "15" "0x24" "0x07" "0x28"
+            elif [ $i == 9 ]; then
+                i2cset -f -y -m "0x06" "15" "0x24" "0x07" "0x06"
+                i2cset -f -y -m "0x80" "15" "0x24" "0x06" "0x80"
+                i2cset -f -y -m "0x04" "15" "0x24" "0x07" "0x04"
+            elif [ $i == 10 ]; then
+                i2cset -f -y -m "0x0c" "15" "0x22" "0x06" "0x0c"
+            elif [ $i == 11 ]; then
+                i2cset -f -y -m "0x80" "15" "0x24" "0x07" "0x80"
+                i2cset -f -y -m "0x01" "15" "0x22" "0x06" "0x01"
+            elif [ $i == 12 ]; then
+                i2cset -f -y -m "0x03" "15" "0x22" "0x07" "0x03"
+            elif [ $i == 13 ]; then
+                i2cset -f -y -m "0x60" "15" "0x22" "0x06" "0x60"
+            elif [ $i == 14 ]; then
+                i2cset -f -y -m "0xc0" "15" "0x22" "0x07" "0xc0"
+            elif [ $i == 15 ]; then
+                i2cset -f -y -m "0x18" "15" "0x22" "0x07" "0x18"
+            elif [ $i == 16 ]; then
+                i2cset -f -y -m "0x30" "15" "0x26" "0x06" "0x18"
+            elif [ $i == 17 ]; then
+                i2cset -f -y -m "0x03" "15" "0x26" "0x06" "0x03"
+            elif [ $i == 18 ]; then
+                i2cset -f -y -m "0x06" "15" "0x26" "0x07" "0x06"
+            fi
+        fi
+    done
+
+    for j in {1..9} 
+    do
+        nvs_present=$(busctl get-property "$service" "$nvs_object_path$j" "$interface" "$property" | cut -d ' ' -f2)
+        echo "$nvs_present"
+        if [ "$nvs_present" == "true" ]; then
+
+            if [ $j == 1 ]; then
+                LEDstate=$(journalctl -u phosphor-multi-gpio-monitor.service | grep -i "184" | tail -1 | cut -d ' ' -f9)
+                if [ "$LEDstate" == "Deasserted" ]; then                  
+                    i2cset -f -y "15" "0x26" "0x02" "0x00"
+                    i2cset -f -y -m "0x80" "15" "0x26" "0x06" "0x7f"
+                    i2cset -f -y "15" "0x26" "0x03" "0x00"
+                    i2cset -f -y -m "0x01" "15" "0x26" "0x07" "0xfe"
+                    sleep 1
+                elif [ "$LEDstate" == "Asserted" ]; then
+                    i2cset -f -y -m "0x80" "15" "0x26" "0x06" "0x80"
+                fi
+                LEDstate=$(journalctl -u phosphor-multi-gpio-monitor.service | grep -i "238" | tail -1 | cut -d ' ' -f9)
+                if [ "$LEDstate" == "Deasserted" ]; then
+                    i2cset -f -y "15" "0x26" "0x02" "0x00"
+                    i2cset -f -y -m "0x40" "15" "0x26" "0x06" "0xbf"
+                    i2cset -f -y "15" "0x26" "0x03" "0x00"
+                    i2cset -f -y -m "0x01" "15" "0x26" "0x07" "0xfe"
+                    sleep 1
+                elif [ "$LEDstate" == "Asserted" ]; then
+                    i2cset -f -y -m "0x40" "15" "0x26" "0x06" "0x40"
+                fi
+            elif [ $j == 2 ]; then
+                LEDstate=$(journalctl -u phosphor-multi-gpio-monitor.service | grep -i "186" | tail -1 | cut -d ' ' -f9)
+                if [ "$LEDstate" == "Deasserted" ]; then               
+                    i2cset -f -y "15" "0x21" "0x02" "0x00"
+                    i2cset -f -y -m "0x03" "15" "0x21" "0x06" "0xfc"
+                    sleep 1
+                elif [ "$LEDstate" == "Asserted" ]; then
+                    i2cset -f -y -m "0x01" "15" "0x21" "0x06" "0x01"
+                fi
+                LEDstate=$(journalctl -u phosphor-multi-gpio-monitor.service | grep -i "240" | tail -1 | cut -d ' ' -f9)
+                if [ "$LEDstate" == "Deasserted" ]; then
+                    i2cset -f -y "15" "0x26" "0x03" "0x00"
+                    i2cset -f -y -m "0x80" "15" "0x26" "0x07" "0x7f"
+                    i2cset -f -y "15" "0x21" "0x02" "0x00"
+                    i2cset -f -y -m "0x02" "15" "0x21" "0x06" "0xfd"
+                    sleep 1
+                elif [ "$LEDstate" == "Asserted" ]; then
+                    i2cset -f -y -m "0x80" "15" "0x26" "0x07" "0x80"
+                fi
+            elif [ $j == 3 ]; then
+                LEDstate=$(journalctl -u phosphor-multi-gpio-monitor.service | grep -i "188" | tail -1 | cut -d ' ' -f9)
+                if [ "$LEDstate" == "Deasserted" ]; then               
+                    i2cset -f -y "15" "0x26" "0x03" "0x00"
+                    i2cset -f -y -m "0x60" "15" "0x26" "0x07" "0x9f"
+                    sleep 1
+                elif [ "$LEDstate" == "Asserted" ]; then
+                    i2cset -f -y -m "0x20" "15" "0x26" "0x07" "0x20"
+                fi
+                LEDstate=$(journalctl -u phosphor-multi-gpio-monitor.service | grep -i "242" | tail -1 | cut -d ' ' -f9)
+                if [ "$LEDstate" == "Deasserted" ]; then
+                    i2cset -f -y "15" "0x26" "0x03" "0x00"
+                    i2cset -f -y -m "0x50" "15" "0x26" "0x07" "0xaf"
+                    sleep 1
+                elif [ "$LEDstate" == "Asserted" ]; then
+                    i2cset -f -y -m "0x10" "15" "0x26" "0x07" "0x10"
+                fi
+            elif [ $j == 4 ]; then
+                LEDstate=$(journalctl -u phosphor-multi-gpio-monitor.service | grep -i "190" | tail -1 | cut -d ' ' -f9)
+                if [ "$LEDstate" == "Deasserted" ]; then
+                    i2cset -f -y "15" "0x21" "0x02" "0x00"
+                    i2cset -f -y -m "0xc0" "15" "0x21" "0x06" "0x3f"
+                    sleep 1
+                elif [ "$LEDstate" == "Asserted" ]; then
+                    i2cset -f -y -m "0x40" "15" "0x21" "0x06" "0x40"
+                fi
+                LEDstate=$(journalctl -u phosphor-multi-gpio-monitor.service | grep -i "244" | tail -1 | cut -d ' ' -f9)
+                if [ "$LEDstate" == "Deasserted" ]; then
+                    i2cset -f -y "15" "0x21" "0x02" "0x00"
+                    i2cset -f -y -m "0xa0" "15" "0x21" "0x06" "0x5f"
+                    sleep 1
+                elif [ "$LEDstate" == "Asserted" ]; then
+                    i2cset -f -y -m "0x20" "15" "0x21" "0x06" "0x20"
+                fi
+            elif [ $j == 5 ]; then
+                LEDstate=$(journalctl -u phosphor-multi-gpio-monitor.service | grep -i "192" | tail -1 | cut -d ' ' -f9)
+                if [ "$LEDstate" == "Deasserted" ]; then               
+                    i2cset -f -y "15" "0x21" "0x02" "0x00"
+                    i2cset -f -y -m "0x18" "15" "0x21" "0x06" "0xe7"
+                    sleep 1
+                elif [ "$LEDstate" == "Asserted" ]; then
+                    i2cset -f -y -m "0x08" "15" "0x21" "0x06" "0x08"
+                fi
+                LEDstate=$(journalctl -u phosphor-multi-gpio-monitor.service | grep -i "246" | tail -1 | cut -d ' ' -f9)
+                if [ "$LEDstate" == "Deasserted" ]; then
+                    i2cset -f -y "15" "0x21" "0x02" "0x00"
+                    i2cset -f -y -m "0x14" "15" "0x21" "0x06" "0xeb"
+                    sleep 1
+                elif [ "$LEDstate" == "Asserted" ]; then
+                    i2cset -f -y -m "0x04" "15" "0x21" "0x06" "0x04"
+                fi
+            elif [ $j == 6 ]; then
+                LEDstate=$(journalctl -u phosphor-multi-gpio-monitor.service | grep -i "194" | tail -1 | cut -d ' ' -f9)
+                if [ "$LEDstate" == "Deasserted" ]; then                 
+                    i2cset -f -y "15" "0x21" "0x03" "0x00"
+                    i2cset -f -y -m "0x30" "15" "0x21" "0x07" "0xcf"
+                    sleep 1
+                elif [ "$LEDstate" == "Asserted" ]; then
+                    i2cset -f -y -m "0x10" "15" "0x21" "0x07" "0x10"
+                fi
+                LEDstate=$(journalctl -u phosphor-multi-gpio-monitor.service | grep -i "248" | tail -1 | cut -d ' ' -f9)
+                if [ "$LEDstate" == "Deasserted" ]; then
+                    i2cset -f -y "15" "0x21" "0x03" "0x00"
+                    i2cset -f -y -m "0x28" "15" "0x21" "0x07" "0xd7"
+                    sleep 1
+                elif [ "$LEDstate" == "Asserted" ]; then
+                    i2cset -f -y -m "0x08" "15" "0x21" "0x07" "0x08"
+                fi
+            elif [ $j == 7 ]; then
+                LEDstate=$(journalctl -u phosphor-multi-gpio-monitor.service | grep -i "196" | tail -1 | cut -d ' ' -f9)
+                if [ "$LEDstate" == "Deasserted" ]; then                
+                    i2cset -f -y "15" "0x21" "0x03" "0x00"
+                    i2cset -f -y -m "0x06" "15" "0x21" "0x07" "0xf9"
+                    sleep 1
+                elif [ "$LEDstate" == "Asserted" ]; then
+                    i2cset -f -y -m "0x02" "15" "0x21" "0x07" "0x02"
+                fi
+                LEDstate=$(journalctl -u phosphor-multi-gpio-monitor.service | grep -i "250" | tail -1 | cut -d ' ' -f9)
+                if [ "$LEDstate" == "Deasserted" ]; then
+                    i2cset -f -y "15" "0x21" "0x03" "0x00"
+                    i2cset -f -y -m "0x05" "15" "0x21" "0x07" "0xfa"
+                    sleep 1
+                elif [ "$LEDstate" == "Asserted" ]; then
+                    i2cset -f -y -m "0x01" "15" "0x21" "0x07" "0x01"
+                fi 
+            elif [ $j == 8 ]; then
+                LEDstate=$(journalctl -u phosphor-multi-gpio-monitor.service | grep -i "198" | tail -1 | cut -d ' ' -f9)
+                if [ "$LEDstate" == "Deasserted" ]; then                 
+                    i2cset -f -y "15" "0x20" "0x02" "0x00"
+                    i2cset -f -y -m "0x30" "15" "0x20" "0x06" "0xcf"
+                    sleep 1
+                elif [ "$LEDstate" == "Asserted" ]; then
+                    i2cset -f -y -m "0x10" "15" "0x20" "0x06" "0x10"
+                fi
+                LEDstate=$(journalctl -u phosphor-multi-gpio-monitor.service | grep -i "252" | tail -1 | cut -d ' ' -f9)
+                if [ "$LEDstate" == "Deasserted" ]; then
+                    i2cset -f -y "15" "0x20" "0x02" "0x00"
+                    i2cset -f -y -m "0x28" "15" "0x20" "0x06" "0xd7"
+                    sleep 1
+                elif [ "$LEDstate" == "Asserted" ]; then
+                    i2cset -f -y -m "0x08" "15" "0x20" "0x06" "0x08"
+                fi
+            elif [ $j == 9 ]; then
+                LEDstate=$(journalctl -u phosphor-multi-gpio-monitor.service | grep -i "198" | tail -1 | cut -d ' ' -f9)
+                if [ "$LEDstate" == "Deasserted" ]; then                   
+                    i2cset -f -y "15" "0x20" "0x02" "0x00"
+                    i2cset -f -y -m "0x06" "15" "0x20" "0x06" "0xf9"
+                    sleep 1
+                elif [ "$LEDstate" == "Asserted" ]; then
+                    i2cset -f -y -m "0x02" "15" "0x20" "0x06" "0x02"
+                fi
+                LEDstate=$(journalctl -u phosphor-multi-gpio-monitor.service | grep -i "254" | tail -1 | cut -d ' ' -f9)
+                if [ "$LEDstate" == "Deasserted" ]; then
+                    i2cset -f -y "15" "0x20" "0x02" "0x00"
+                    i2cset -f -y -m "0x05" "15" "0x20" "0x06" "0xfa"
+                    sleep 1
+                elif [ "$LEDstate" == "Asserted" ]; then
+                    i2cset -f -y -m "0x01" "15" "0x20" "0x06" "0x01"
+                fi
+            fi
+        else
+            if [ $j == 1 ]; then
+                i2cset -f -y -m "0xc0" "15" "0x26" "0x06" "0xc0"
+            elif [ $j == 2 ]; then
+                i2cset -f -y -m "0x01" "15" "0x21" "0x06" "0x01"
+                i2cset -f -y -m "0x80" "15" "0x26" "0x07" "0x80"
+            elif [ $j == 3 ]; then
+                i2cset -f -y -m "0x30" "15" "0x26" "0x07" "0x30"
+            elif [ $j == 4 ]; then
+                i2cset -f -y -m "0x60" "15" "0x21" "0x06" "0x60"
+            elif [ $j == 5 ]; then
+                i2cset -f -y -m "0x0c" "15" "0x21" "0x06" "0x0c"
+            elif [ $j == 6 ]; then
+                i2cset -f -y -m "0x18" "15" "0x21" "0x07" "0x18"
+            elif [ $j == 7 ]; then
+                i2cset -f -y -m "0x03" "15" "0x21" "0x07" "0x03"
+            elif [ $j == 8 ]; then
+                i2cset -f -y -m "0x18" "15" "0x20" "0x06" "0x18"
+            elif [ $j == 9 ]; then
+                i2cset -f -y -m "0x03" "15" "0x20" "0x06" "0x03"
+            fi
+        fi
+    done
+
+    return 0
+}
+
+pre_status=$FAN_STATUS_UNKNOWN
+
+while true
+do
+    fan_status=$FAN_STATUS_NORMAL
+    # Check each sensor on the FCB whether alert critical alarm
+    fan_status=$(check_tray_led_status)
+    echo "$fan_status"   
+    
+    sleep 1     
+done

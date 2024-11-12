@@ -7,12 +7,16 @@ RDEPENDS:${PN} += "libgpiod-tools"
 SRC_URI += " \
     file://ventura-sys-init.service \
     file://ventura-early-sys-init \
+    file://ventura-tray-status-monitor \
+    file://ventura-tray-status-monitor.service \
     "
 SYSTEMD_PACKAGES = "${PN}"
 SYSTEMD_SERVICE:${PN}:append = " \
     ventura-sys-init.service \
+    ventura-tray-status-monitor.service \
     "
 do_install() {
     install -d ${D}${libexecdir}
     install -m 0755 ${WORKDIR}/ventura-early-sys-init ${D}${libexecdir}
+    install -m 0755 ${WORKDIR}/ventura-tray-status-monitor ${D}${libexecdir}
 }
