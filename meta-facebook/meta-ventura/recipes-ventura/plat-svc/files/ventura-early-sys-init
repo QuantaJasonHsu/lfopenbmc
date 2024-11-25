@@ -9,6 +9,10 @@ set_bmc_ready()
     return 0
 }
 
+power_on_led_init() {
+    systemctl start obmc-led-group-start@power_on.service
+}
+
 mdio_setting_for_marvell_chip()
 {
     # Enable 802.1Q mode with secure mode (0x03) on port 0/2/9
@@ -22,7 +26,6 @@ mdio_setting_for_marvell_chip()
     # Port 9 = 20
     mdio 1* 0x02 0x07 0x000a
     mdio 1* 0x09 0x07 0x0014
-
     sleep 1
     # Setting VTU
     # Vid = 10
@@ -59,5 +62,6 @@ gpioset 0 100=1
 
 mdio_setting_for_marvell_chip
 set_bmc_ready
+power_on_led_init
 
 exit 0
