@@ -4,6 +4,7 @@ inherit obmc-phosphor-systemd systemd
 
 SERVICE_LIST = "power-good-assert@.service \
                 power-good-deassert@.service \
+                critical-leak-detect-assert@.service \
                 leak-detect-assert@.service \
                 leak-detect-deassert@.service \
                 rpu-ready-assert@.service \
@@ -28,16 +29,16 @@ SYSTEMD_AUTO_ENABLE = "enable"
 
 do_install:append:() {
     install -d ${D}${datadir}/phosphor-gpio-monitor
-    install -m 0644 ${WORKDIR}/ventura-phosphor-multi-gpio-monitor.json \
+    install -m 0644 ${UNPACKDIR}/ventura-phosphor-multi-gpio-monitor.json \
                     ${D}${datadir}/phosphor-gpio-monitor/phosphor-multi-gpio-monitor.json
-    install -m 0644 ${WORKDIR}/ventura-phosphor-multi-gpio-presence.json \
+    install -m 0644 ${UNPACKDIR}/ventura-phosphor-multi-gpio-presence.json \
                     ${D}${datadir}/phosphor-gpio-monitor/phosphor-multi-gpio-presence.json
 
     for s in ${SERVICE_LIST}
     do
-        install -m 0644 ${WORKDIR}/${s} ${D}${systemd_system_unitdir}/${s}
+        install -m 0644 ${UNPACKDIR}/${s} ${D}${systemd_system_unitdir}/${s}
     done
 
     install -d ${D}${libexecdir}/${PN}
-    install -m 0755 ${WORKDIR}/logging ${D}${libexecdir}/${PN}/
+    install -m 0755 ${UNPACKDIR}/logging ${D}${libexecdir}/${PN}/
 }
