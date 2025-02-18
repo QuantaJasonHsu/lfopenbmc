@@ -9,6 +9,8 @@ SERVICE_LIST = "power-good-assert@.service \
                 leak-detect-deassert@.service \
                 rpu-ready-assert@.service \
                 rpu-ready-deassert@.service \
+                led-amber-assert@.service \
+                led-amber-deassert@.service \
                 "
 
 SERVICE_FILE_FMT = "file://{0}"
